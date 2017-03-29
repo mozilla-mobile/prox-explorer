@@ -1,35 +1,37 @@
 # prox-explorer
 
-Web interface to explore Prox data sources
+A web-based exploration of event APIs for [Project Prox][prox].
 
-## Running Locally
+## Setup
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
+Requirements:
+* [Node.js](http://nodejs.org/)
+* [Heroku Toolbelt](https://toolbelt.heroku.com/)
 
+Install deps:
 ```sh
-$ npm install
-$ npm start
+npm install
 ```
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
-
-## Deploying to Heroku
-
+[Download .env-prox-explorer][.env], which contains the API keys. Rename it:
+```sh
+mv .env-prox-explorer .env
 ```
-$ heroku create
-$ git push heroku master
-$ heroku open
+
+Let us know if you don't have access.
+
+## Running
+Run locally:
+```sh
+heroku local
 ```
-or
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+By default, the server's local address should be: http://localhost:5000
 
-## Documentation
+## Deployment
+Pushing to `mozilla-mobile/prox-explorer:master` should autodeploy to Heroku.
+If you need manual access, access the web interface or push to the heroku
+remote.
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
-
-- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
+[.env]: https://drive.google.com/a/mozilla.com/file/d/0B1U7M7wyeYhFNERndHdHYTFZLTA/view?usp=sharing
+[prox]: https://github.com/mozilla-mobile/prox
