@@ -37,4 +37,5 @@ app.get('/events/eventbrite', (eventRequest, eventResponse) => {
 let port = process.env.PORT || 5000
 app.listen(port, () => {
   console.log(`listening on *:${port}`);
+  console.log(`running locally? try http://127.0.0.1:${port}`);
 });
