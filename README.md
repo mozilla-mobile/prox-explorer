@@ -18,7 +18,8 @@ npm install
 mv .env-prox-explorer .env
 ```
 
-Let us know if you don't have access.
+Let us know if you don't have access. Note that the production server uses a
+separate key from ^.
 
 ## Running
 Run locally:
