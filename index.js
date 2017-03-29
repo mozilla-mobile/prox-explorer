@@ -2,7 +2,7 @@ let express = require('express');
 let app = express();
 let request = require('request');
 
-let eventbriteOAuth = process.env.EVENTBRITE_OAUTH
+let eventbriteOAuth = process.env.EVENTBRITE_OAUTH;
 
 app.use(express.static('public'));
 
