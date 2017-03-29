@@ -1,0 +1,15 @@
+{
+  "name": "prox-list",
+  "version": "0.0.1",
+  "description": "Prox List",
+  "engines": {
+    "node": "7.7.4"
+  },
+  "scripts": {
+    "start": "node index.js"
+   },
+  "dependencies": {
+    "express": "^4.10.2",
+    "request": "^2.81.0"
+  }
+}
