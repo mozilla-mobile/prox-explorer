@@ -38,6 +38,10 @@ function addEvents(response, provider) {
     li.appendChild(a);
     list.appendChild(li);
   }
+
+  Array.from(list.children)
+    .sort((a, b) => a.textContent < b.textContent)
+    .reduce((prev, el) => list.insertBefore(el, prev));
 }
 
 function loadEvent(event) {
