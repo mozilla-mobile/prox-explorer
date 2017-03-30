@@ -1,7 +1,22 @@
-function getEvents(provider, page) {
+'use strict';
+
+window.onload = () => {
+  for (let provider of [eventbrite, eventful]) {
+    getEvents(provider.endpoint, 1).then(response => {
+      addEvents(response, provider);
+
+      let pageCount = provider.pageCount(response);
+      for (let i = 2; i <= pageCount; i++) {
+        getEvents(provider.endpoint, i).then(response => addEvents(response, provider));
+      }
+    });
+  }
+};
+
+function getEvents(endpoint, page) {
   return new Promise(function (resolve, reject) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', 'events/' + provider + '?lat=41.892455&long=-87.63397&radius=1&page=' + page, true);
+    xhr.open('GET', 'events/' + endpoint + '?lat=41.892455&long=-87.63397&radius=1&page=' + page, true);
     xhr.responseType = 'json';
     xhr.onload = function () {
       resolve(this.response);
@@ -10,28 +25,24 @@ function getEvents(provider, page) {
   });
 }
 
-function addEvents(response) {
-  console.log('Adding Eventbrite page ' + response.pagination.page_number + '/' + response.pagination.page_count);
-
-  let events = response.events;
-  if (!events) {
-    document.write("Error: " + JSON.stringify(response));
-    return;
-  }
-
+function addEvents(response, provider) {
+  let events = provider.events(response);
   let list = document.getElementById('nav');
   for (let event of events) {
+    event = provider.wrap(event);
     let a = document.createElement('a');
-    a.textContent = event.name.text;
+    a.textContent = event.name;
     a.href = 'javascript:void(0);';
-    a.onclick = () => loadEvent(event);
+    a.onclick = () => loadEvent(event.data);
     let li = document.createElement('li');
-    list.appendChild(a);
+    li.appendChild(a);
     list.appendChild(li);
   }
 }
 
 function loadEvent(event) {
+  console.log(event);
+
   // Clear existing data.
   let data = document.getElementById('data');
   while (data.hasChildNodes()) {
@@ -44,31 +55,46 @@ function loadEvent(event) {
     label.textContent = field;
     row.appendChild(label);
     let value = document.createElement('td');
-
-    let text = event[field];
-    if (text instanceof Object) {
-      switch (field) {
-      case 'name': text = text.text; break;
-      case 'description': text = text.text; break;
-      case 'start': text = text.local; break;
-      case 'end': text = text.local; break;
-      }
-    }
-    value.textContent = text;
+    value.textContent = event[field];
 
     row.appendChild(value);
     data.appendChild(row);
   }
-  console.log(event);
 }
 
-window.onload = () => {
-  getEvents('eventbrite', 1).then(response => {
-    addEvents(response);
+let eventbrite = {
+  endpoint: 'eventbrite',
+  events: response => {
+    let events = response.events;
+    if (!events) throw reponse;
+    return events;
+  },
+  wrap: event => {
+    event.name = event.name && event.name.text;
+    event.description = event.description && event.description.text;
+    event.start = event.start && event.start.local;
+    event.end = event.end && event.end.local;
+    return {
+      name: event.name,
+      data: event,
+    };
+  },
+  pageCount: response => response.pagination.page_count,
+};
 
-    let pageCount = response.pagination.page_count;
-    for (let i = 2; i <= pageCount; i++) {
-      getEvents('eventbrite', i).then(addEvents);
-    }
-  });
+let eventful = {
+  endpoint: 'eventful',
+  events: response => {
+    let events = response.events && response.events.event;
+    if (!events) throw reponse;
+    return events;
+  },
+  wrap: event => {
+    event.categories = event.categories.category.map(el => el.name.replace('&amp;', '&')).join(', ');
+    return {
+      name: event.title,
+      data: event,
+    };
+  },
+  pageCount: response => response.page_count,
 };
